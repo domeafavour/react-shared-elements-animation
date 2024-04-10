@@ -1,12 +1,7 @@
-import React from 'react';
+import { SharedElementProps } from './typings';
 import { useSharedRectAnimation } from './useSharedRectAnimation';
 
-interface Props<T extends HTMLElement> {
-  sharedId: string;
-  children: (props: {
-    ref: React.MutableRefObject<T | null>;
-  }) => React.ReactNode;
-}
+interface Props<T extends HTMLElement> extends SharedElementProps<T> {}
 
 export function SharedPosition<T extends HTMLElement>({
   sharedId: id,
