@@ -5,8 +5,8 @@ import { useSharedPhotoTitleAnimation } from '@/hooks/useSharedPhotoTitleAnimati
 import { Link } from 'umi';
 
 export function PhotoItem({ photo }: { photo: Photo }) {
-  const titleRef = useSharedPhotoTitleAnimation(photo.id);
-  const imageRef = useSharedPhotoImageAnimation(photo.id);
+  const [titleRef] = useSharedPhotoTitleAnimation(photo.id);
+  const [imageRef] = useSharedPhotoImageAnimation(photo.id);
 
   return (
     <div className="border border-solid border-gray-400 rounded-md size-52">

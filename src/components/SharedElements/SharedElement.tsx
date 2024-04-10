@@ -13,6 +13,6 @@ export function SharedElement<T extends HTMLElement = HTMLElement>({
   styleKeys,
 }: Props<T>) {
   return children({
-    ref: useSharedElementAnimation<T>(sharedId, { styleKeys, options }),
+    ref: useSharedElementAnimation<T>(sharedId, { styleKeys, options })[0],
   });
 }

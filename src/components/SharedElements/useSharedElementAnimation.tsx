@@ -18,5 +18,5 @@ export function useSharedElementAnimation<T extends HTMLElement = HTMLElement>(
     styleKeys,
     animationOptions
   );
-  return useComposedRef(rectAnimationRef, styleAnimationRef);
+  return [useComposedRef(rectAnimationRef, styleAnimationRef)] as const;
 }

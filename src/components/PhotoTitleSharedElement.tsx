@@ -7,5 +7,5 @@ interface Props {
 }
 
 export function PhotoTitleSharedElement({ children, photoId }: Props) {
-  return children({ ref: useSharedPhotoTitleAnimation(photoId) });
+  return children({ ref: useSharedPhotoTitleAnimation(photoId)[0] });
 }
