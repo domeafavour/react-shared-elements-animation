@@ -1,5 +1,9 @@
 import { GrayBlock } from '@/components/GrayBlock';
-import { SharedPosition, SharedSize } from '@/components/SharedElements';
+import {
+  SharedPosition,
+  SharedRect,
+  SharedSize,
+} from '@/components/SharedElements';
 
 const DocsPage = () => {
   return (
@@ -12,6 +16,12 @@ const DocsPage = () => {
         shaking broken send heavy slow quick stiff eager locate press largest
         she anyway
       </p>
+      <div className="flex flex-row space-x-2">
+        <GrayBlock className="size-24" />
+        <SharedRect<HTMLDivElement> sharedId="SharedRect">
+          {({ ref }) => <GrayBlock ref={ref} className="size-28" />}
+        </SharedRect>
+      </div>
       <SharedPosition<HTMLDivElement> sharedId="SharedElement">
         {({ ref }) => <GrayBlock ref={ref} />}
       </SharedPosition>
