@@ -27,7 +27,7 @@ export default function PhotosPage() {
                 {({ ref }) => (
                   <h6
                     ref={ref}
-                    className="whitespace-break-spaces text-lg font-normal text-gray-700"
+                    className="whitespace-break-spaces text-center text-lg font-normal text-gray-700"
                   >
                     {photo.title}
                   </h6>
