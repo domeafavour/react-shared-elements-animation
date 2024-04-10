@@ -1,7 +1,7 @@
 export interface SharedElementProps<T extends HTMLElement = HTMLElement> {
   sharedId: string;
   children: (props: {
-    ref: React.MutableRefObject<T | null>;
+    ref: React.MutableRefObject<T | null> | React.RefCallback<T | null>;
   }) => React.ReactNode;
 }
 
