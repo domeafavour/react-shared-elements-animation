@@ -8,4 +8,4 @@ share elements animation while routes change
 
 ## TODO
 
-- [ ] More styles support
+- [x] More styles support
