@@ -1,6 +1,7 @@
-import { Link } from 'umi';
 import { GrayBlock } from '@/components/GrayBlock';
 import { SharedRect } from '@/components/SharedElements';
+import { useSharedHeaderStyleAnimation } from '@/hooks/useSharedHeaderStyleAnimation';
+import { Link } from 'umi';
 
 const randomTexts = [
   'supper place radio mainly process cloud else seen number flight shut fun mathematics window appearance clothes eaten blue down party cool spell black while',
@@ -16,8 +17,11 @@ const items = Array.from({ length: 8 }, (_, i) => ({
 }));
 
 export default function HomePage() {
+  const headerRef = useSharedHeaderStyleAnimation();
+
   return (
     <div>
+      <GrayBlock ref={headerRef} className="rounded-full" />
       <ul className="flex flex-col space-y-2">
         {items.map((item) => (
           <li key={item.sharedItemId}>

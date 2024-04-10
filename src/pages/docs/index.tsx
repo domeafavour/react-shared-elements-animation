@@ -1,5 +1,6 @@
 import { GrayBlock } from '@/components/GrayBlock';
 import { SharedRect } from '@/components/SharedElements';
+import { useSharedHeaderStyleAnimation } from '@/hooks/useSharedHeaderStyleAnimation';
 import { useLocation } from 'umi';
 
 function useURLSharedItemId() {
@@ -10,8 +11,10 @@ function useURLSharedItemId() {
 
 const DocsPage = () => {
   const sharedItemId = useURLSharedItemId();
+  const headerRef = useSharedHeaderStyleAnimation();
   return (
     <div>
+      <GrayBlock ref={headerRef} className="rounded-none w-full bg-gray-800" />
       <SharedRect<HTMLDivElement> sharedId={sharedItemId}>
         {({ ref }) => <GrayBlock ref={ref} className="w-full h-80" />}
       </SharedRect>
