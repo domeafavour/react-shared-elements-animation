@@ -1,5 +1,14 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { useStoreSelector } from './context';
+
+const SHARED_RECTS = new Map<string, DOMRect>();
+
+function getRect(sharedId: string) {
+  return SHARED_RECTS.get(sharedId) ?? null;
+}
+
+function setRect(sharedId: string, rect: DOMRect) {
+  SHARED_RECTS.set(sharedId, rect);
+}
 
 export function useSharedRectAnimation<T extends HTMLElement>(
   sharedId: string,
@@ -13,8 +22,6 @@ export function useSharedRectAnimation<T extends HTMLElement>(
     latestAnimateParamsRef.current = animateParams;
   });
   const nodeRef = useRef<T | null>(null);
-  const setRect = useStoreSelector((store) => store.setRect);
-  const getRect = useStoreSelector((store) => store.getRect);
 
   useEffect(() => {
     const node = nodeRef.current;
