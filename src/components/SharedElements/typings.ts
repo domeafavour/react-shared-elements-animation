@@ -8,3 +8,10 @@ export interface SharedElementProps<T extends HTMLElement = HTMLElement> {
 export type SharedElementType = <T extends HTMLElement = HTMLElement>(
   props: SharedElementProps<T>
 ) => React.ReactNode;
+
+export type StyleObject = Record<string, string>;
+
+export type StyleKey = Exclude<
+  keyof CSSStyleDeclaration,
+  'getPropertyValue' | 'getPropertyPriority' | symbol
+>;

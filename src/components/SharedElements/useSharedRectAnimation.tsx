@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { defaultKeyframeAnimationOptions } from './constants';
 
 const SHARED_RECTS = new Map<string, DOMRect>();
 
@@ -12,24 +13,36 @@ function setRect(sharedId: string, rect: DOMRect) {
 
 export function useSharedRectAnimation<T extends HTMLElement>(
   sharedId: string,
-  animateParams: (
-    previousRect: DOMRect,
-    currentRect: DOMRect
-  ) => Parameters<typeof Element.prototype.animate>
+  options = defaultKeyframeAnimationOptions
 ) {
-  const latestAnimateParamsRef = useRef(animateParams);
-  useEffect(() => {
-    latestAnimateParamsRef.current = animateParams;
-  });
   const nodeRef = useRef<T | null>(null);
+  const latestOptionsRef = useRef(options);
+  useEffect(() => {
+    latestOptionsRef.current = options;
+  });
 
   useEffect(() => {
     const node = nodeRef.current;
     const previousRect = getRect(sharedId);
     if (previousRect && node) {
       const currentRect = node.getBoundingClientRect();
+
+      const dx = previousRect.left - currentRect.left;
+      const dy = previousRect.top - currentRect.top;
       node.animate(
-        ...latestAnimateParamsRef.current(previousRect, currentRect)
+        [
+          {
+            transform: `translate(${dx}px, ${dy}px)`,
+            width: `${previousRect.width}px`,
+            height: `${previousRect.height}px`,
+          },
+          {
+            transform: 'translate(0px, 0px)',
+            width: `${currentRect.width}px`,
+            height: `${currentRect.height}px`,
+          },
+        ],
+        latestOptionsRef.current
       );
     }
   }, [sharedId]);

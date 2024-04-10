@@ -1,5 +1,10 @@
-import { createSharedElement } from './createSharedElement';
+import { SharedElementProps } from './typings';
+import { useSharedRectAnimation } from './useSharedRectAnimation';
 
-export const SharedRect = createSharedElement({
-  displayName: 'SharedRect',
-});
+export function SharedRect<T extends HTMLElement = HTMLElement>({
+  children,
+  sharedId,
+}: SharedElementProps<T>) {
+  const [ref] = useSharedRectAnimation<T>(sharedId);
+  return children({ ref });
+}
