@@ -13,7 +13,7 @@ export function usePhotosQuery() {
     queryKey: ['photos'],
     queryFn: async () => {
       const resp = await fetch(
-        'https://jsonplaceholder.typicode.com/photos?_page=1&_limit=20'
+        'https://jsonplaceholder.typicode.com/photos?_page=1&_limit=50'
       );
       const json = await resp.json();
       return json as Photo[];
