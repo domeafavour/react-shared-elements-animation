@@ -1,8 +1,6 @@
-import { useComposedRef } from '@/hooks/useComposedRef';
 import {
   SharedElementProps,
-  useSharedRectAnimation,
-  useSharedStyleAnimation,
+  useSharedElementAnimation,
 } from './SharedElements';
 
 interface Props {
@@ -11,16 +9,12 @@ interface Props {
 }
 
 export function PhotoTitleSharedElement({ children, photoId }: Props) {
-  const [rectAnimationRef] = useSharedRectAnimation<HTMLHeadingElement>(
-    `title${photoId}`
-  );
-
-  const [styleAnimationRef] = useSharedStyleAnimation<HTMLHeadingElement>(
+  const composedRef = useSharedElementAnimation<HTMLHeadingElement>(
     `title${photoId}`,
-    ['fontSize', 'fontWeight', 'color']
+    {
+      styleKeys: ['fontSize', 'fontWeight', 'color'],
+    }
   );
-
-  const composedRef = useComposedRef(rectAnimationRef, styleAnimationRef);
 
   return children({ ref: composedRef });
 }
