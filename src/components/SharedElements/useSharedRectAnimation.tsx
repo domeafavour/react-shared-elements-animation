@@ -1,14 +1,15 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { LRUCache } from './LRUCache';
 import { defaultKeyframeAnimationOptions } from './constants';
 
-const SHARED_RECTS = new Map<string, DOMRect>();
+const lruCache = new LRUCache<DOMRect>(200);
 
 function getRect(sharedId: string) {
-  return SHARED_RECTS.get(sharedId) ?? null;
+  return lruCache.get(sharedId) ?? null;
 }
 
 function setRect(sharedId: string, rect: DOMRect) {
-  SHARED_RECTS.set(sharedId, rect);
+  lruCache.set(sharedId, rect);
 }
 
 export function useSharedRectAnimation<T extends HTMLElement>(

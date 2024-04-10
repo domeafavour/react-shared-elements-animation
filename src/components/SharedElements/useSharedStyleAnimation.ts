@@ -1,15 +1,16 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { LRUCache } from './LRUCache';
 import { defaultKeyframeAnimationOptions } from './constants';
 import { StyleKey, StyleObject } from './typings';
 
-const SHARED_STYLE = new Map<string, StyleObject>();
+const lruCache = new LRUCache<StyleObject>(200);
 
 function getStyle(sharedId: string) {
-  return SHARED_STYLE.get(sharedId) ?? null;
+  return lruCache.get(sharedId) ?? null;
 }
 
 function setStyle(sharedId: string, style: StyleObject) {
-  SHARED_STYLE.set(sharedId, style);
+  lruCache.set(sharedId, style);
 }
 
 export function useSharedStyleAnimation<T extends HTMLElement = HTMLElement>(
