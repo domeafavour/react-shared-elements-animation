@@ -7,6 +7,8 @@ export default defineConfig({
   routes: [
     { path: '/', component: 'home', wrappers: ['@/layouts/HomeLayout'] },
     { path: '/docs', component: 'docs', wrappers: ['@/layouts/DocsLayout'] },
+    { path: '/photos', component: 'photos' },
+    { path: '/photos/:id', component: 'photos/detail' },
   ],
   npmClient: 'pnpm',
 });
