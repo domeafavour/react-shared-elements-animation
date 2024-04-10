@@ -1,7 +1,5 @@
-import {
-  SharedElementProps,
-  useSharedElementAnimation,
-} from './SharedElements';
+import { useSharedPhotoTitleAnimation } from '@/hooks/useSharedPhotoTitleAnimation';
+import { SharedElementProps } from './SharedElements';
 
 interface Props {
   photoId: string | number;
@@ -9,12 +7,5 @@ interface Props {
 }
 
 export function PhotoTitleSharedElement({ children, photoId }: Props) {
-  const composedRef = useSharedElementAnimation<HTMLHeadingElement>(
-    `title${photoId}`,
-    {
-      styleKeys: ['fontSize', 'fontWeight', 'color'],
-    }
-  );
-
-  return children({ ref: composedRef });
+  return children({ ref: useSharedPhotoTitleAnimation(photoId) });
 }
