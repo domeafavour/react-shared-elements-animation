@@ -1,6 +1,13 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { sharedRectAnimationHelper } from './SharedRectAnimationHelper';
+import { sharedRectAnimationHelper } from './AnimationHelper';
 import { defaultKeyframeAnimationOptions } from './constants';
+import { SharedDOMRectNode } from './SharedNode';
+
+export function createSharedDOMRectNode<T extends HTMLElement>(
+  domNode: T | null
+) {
+  return domNode ? new SharedDOMRectNode(domNode) : null;
+}
 
 export function useSharedRectAnimation<T extends HTMLElement>(
   sharedId: string,
@@ -14,7 +21,7 @@ export function useSharedRectAnimation<T extends HTMLElement>(
 
   useEffect(() => {
     sharedRectAnimationHelper.enter(
-      nodeRef.current,
+      createSharedDOMRectNode(nodeRef.current),
       sharedId,
       latestOptionsRef.current
     );
@@ -22,7 +29,10 @@ export function useSharedRectAnimation<T extends HTMLElement>(
 
   useLayoutEffect(
     () => () => {
-      sharedRectAnimationHelper.exit(nodeRef.current, sharedId);
+      sharedRectAnimationHelper.exit(
+        createSharedDOMRectNode(nodeRef.current),
+        sharedId
+      );
     },
     [sharedId]
   );

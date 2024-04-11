@@ -15,3 +15,12 @@ export type StyleKey = Exclude<
   keyof CSSStyleDeclaration,
   'getPropertyValue' | 'getPropertyPriority' | symbol
 >;
+
+export type AnimationOptions = KeyframeAnimationOptions;
+
+export interface SharedNodeRect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
