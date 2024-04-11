@@ -1,10 +1,5 @@
 import { getDOMSharedNodeRect, getDOMStyleObject } from './helpers';
-import {
-  AnimationOptions,
-  SharedNodeRect,
-  StyleKey,
-  StyleObject,
-} from './typings';
+import { AnimationOptions, AnimationValue, StyleKey } from './typings';
 
 export abstract class BaseSharedDOMNode<V> {
   constructor(
@@ -19,12 +14,9 @@ export abstract class BaseSharedDOMNode<V> {
   abstract animate(previousValue: V, options?: AnimationOptions): void;
 }
 
-export class SharedDOMElementNode extends BaseSharedDOMNode<{
-  rect: SharedNodeRect;
-  style: StyleObject;
-}> {
+export class SharedDOMElementNode extends BaseSharedDOMNode<AnimationValue> {
   animate(
-    previousValue: { rect: SharedNodeRect; style: StyleObject },
+    previousValue: AnimationValue,
     options?: KeyframeAnimationOptions | undefined
   ): void {
     const currentRect = this.getNodeRect();

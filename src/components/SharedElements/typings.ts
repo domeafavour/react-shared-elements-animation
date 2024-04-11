@@ -18,6 +18,11 @@ export type StyleKey = Exclude<
 
 export type AnimationOptions = KeyframeAnimationOptions;
 
+export type AnimationValue = {
+  rect: SharedNodeRect;
+  style: StyleObject;
+};
+
 export interface SharedNodeRect {
   left: number;
   top: number;
