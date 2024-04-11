@@ -1,26 +1,13 @@
+import { AnimationHelper } from './AnimationHelper';
 import { defaultKeyframeAnimationOptions } from './constants';
 
-class SharedRectAnimationHelper {
-  private cache = new Map<string, DOMRect>();
-
-  private setRect(sharedId: string, rect: DOMRect) {
-    this.cache.set(sharedId, rect);
-  }
-
-  private getRect(sharedId: string) {
-    return this.cache.get(sharedId);
-  }
-
-  private removeRect(sharedId: string) {
-    this.cache.delete(sharedId);
-  }
-
+class SharedRectAnimationHelper extends AnimationHelper<DOMRect> {
   public enter<T extends HTMLElement = HTMLElement>(
     node: T | null,
     sharedId: string,
     options = defaultKeyframeAnimationOptions
   ) {
-    const previousRect = this.getRect(sharedId);
+    const previousRect = this.getCache(sharedId);
     if (node && previousRect) {
       const currentRect = node.getBoundingClientRect();
       const dx = previousRect.left - currentRect.left;
@@ -49,7 +36,7 @@ class SharedRectAnimationHelper {
   ) {
     if (node) {
       const rect = node.getBoundingClientRect();
-      this.setRect(sharedId, rect);
+      this.setCache(sharedId, rect);
     }
   }
 }
