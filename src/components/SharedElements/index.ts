@@ -1,5 +1,6 @@
 export * from './SharedElement';
 export * from './SharedRect';
+export * from './SharedRectAnimationHelper';
 export * from './SharedStyle';
 export * from './constants';
 export * from './typings';
