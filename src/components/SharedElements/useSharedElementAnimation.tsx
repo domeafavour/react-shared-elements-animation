@@ -16,7 +16,7 @@ export function useSharedElementAnimation<T extends HTMLElement = HTMLElement>(
   options?: { styleKeys?: StyleKey[]; options?: AnimationOptions }
 ) {
   const {
-    styleKeys = [],
+    styleKeys,
     options: animationOptions = defaultKeyframeAnimationOptions,
   } = options ?? {};
   const nodeRef = useRef<T | null>(null);
