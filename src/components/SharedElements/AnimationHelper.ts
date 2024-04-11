@@ -1,10 +1,11 @@
 import {
   BaseSharedDOMNode,
+  SharedDOMElementNode,
   SharedDOMRectNode,
   SharedDOMStyleNode,
 } from './SharedNode';
 import { defaultKeyframeAnimationOptions } from './constants';
-import { AnimationOptions } from './typings';
+import { AnimationOptions, StyleObject } from './typings';
 
 type InferSharedDOMNodeValue<T> = T extends BaseSharedDOMNode<infer V>
   ? V
@@ -33,6 +34,30 @@ export abstract class DOMAnimationHelper<N extends BaseSharedDOMNode<any>> {
 
   public abstract exit(sharedNode: N | null, sharedId: string): void;
 }
+
+export class SharedElementAnimationHelper extends DOMAnimationHelper<SharedDOMElementNode> {
+  public enter(
+    sharedNode: SharedDOMElementNode | null,
+    sharedId: string,
+    options?: KeyframeAnimationOptions | undefined
+  ): void {
+    const previousValue = this.getCache(sharedId);
+    if (sharedNode && previousValue) {
+      sharedNode.animate(previousValue, options);
+    }
+  }
+
+  public exit(sharedNode: SharedDOMElementNode | null, sharedId: string): void {
+    if (sharedNode) {
+      this.setCache(sharedId, {
+        rect: sharedNode.getNodeRect(),
+        style: sharedNode.getStyle(),
+      });
+    }
+  }
+}
+
+export const sharedElementAnimationHelper = new SharedElementAnimationHelper();
 
 class SharedRectAnimationHelper extends DOMAnimationHelper<SharedDOMRectNode> {
   public enter(

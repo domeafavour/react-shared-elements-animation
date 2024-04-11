@@ -4,6 +4,11 @@ export function getDOMStyleObject<T extends HTMLElement>(
   domNode: T,
   styleKeys?: StyleKey[]
 ): StyleObject {
+  // styleKeys: []
+  if (styleKeys && !styleKeys.length) {
+    return {};
+  }
+
   const computedStyle = getComputedStyle(domNode);
   if (!styleKeys) {
     return computedStyle as any;

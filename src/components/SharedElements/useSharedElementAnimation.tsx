@@ -1,22 +1,47 @@
-import { useComposedRef } from '@/hooks/useComposedRef';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import { sharedElementAnimationHelper } from './AnimationHelper';
+import { SharedDOMElementNode } from './SharedNode';
 import { defaultKeyframeAnimationOptions } from './constants';
-import { StyleKey } from './typings';
-import { useSharedRectAnimation } from './useSharedRectAnimation';
-import { useSharedStyleAnimation } from './useSharedStyleAnimation';
+import { AnimationOptions, StyleKey } from './typings';
+
+export function createSharedDOMElementNode<T extends HTMLElement>(
+  domNode: T | null,
+  styleKeys?: StyleKey[]
+) {
+  return domNode ? new SharedDOMElementNode(domNode, styleKeys) : null;
+}
 
 export function useSharedElementAnimation<T extends HTMLElement = HTMLElement>(
   sharedId: string,
-  options?: { styleKeys?: StyleKey[]; options?: KeyframeAnimationOptions }
+  options?: { styleKeys?: StyleKey[]; options?: AnimationOptions }
 ) {
   const {
     styleKeys = [],
     options: animationOptions = defaultKeyframeAnimationOptions,
   } = options ?? {};
-  const [rectAnimationRef] = useSharedRectAnimation<T>(sharedId);
-  const [styleAnimationRef] = useSharedStyleAnimation<T>(
-    sharedId,
-    styleKeys,
-    animationOptions
-  );
-  return [useComposedRef(rectAnimationRef, styleAnimationRef)] as const;
+  const nodeRef = useRef<T | null>(null);
+  const latestStyleKeysRef = useRef(styleKeys);
+  const latestAnimationOptionsRef = useRef(animationOptions);
+
+  useEffect(() => {
+    latestStyleKeysRef.current = styleKeys;
+    latestAnimationOptionsRef.current = animationOptions;
+  });
+
+  useEffect(() => {
+    sharedElementAnimationHelper.enter(
+      createSharedDOMElementNode(nodeRef.current, latestStyleKeysRef.current),
+      sharedId,
+      latestAnimationOptionsRef.current
+    );
+  }, [sharedId]);
+
+  useLayoutEffect(() => () => {
+    sharedElementAnimationHelper.exit(
+      createSharedDOMElementNode(nodeRef.current, latestStyleKeysRef.current),
+      sharedId
+    );
+  });
+
+  return [nodeRef] as const;
 }

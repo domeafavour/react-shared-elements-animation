@@ -19,6 +19,40 @@ export abstract class BaseSharedDOMNode<V> {
   abstract animate(previousValue: V, options?: AnimationOptions): void;
 }
 
+export class SharedDOMElementNode extends BaseSharedDOMNode<{
+  rect: SharedNodeRect;
+  style: StyleObject;
+}> {
+  animate(
+    previousValue: { rect: SharedNodeRect; style: StyleObject },
+    options?: KeyframeAnimationOptions | undefined
+  ): void {
+    const currentRect = this.getNodeRect();
+    const currentStyle = this.getStyle();
+    const previousRect = previousValue.rect;
+    const previousStyle = previousValue.style;
+    const dx = previousRect.left - currentRect.left;
+    const dy = previousRect.top - currentRect.top;
+    this.domNode.animate(
+      [
+        {
+          ...previousStyle,
+          transform: `translate(${dx}px, ${dy}px)`,
+          width: `${previousRect.width}px`,
+          height: `${previousRect.height}px`,
+        },
+        {
+          ...currentStyle,
+          transform: 'translate(0px, 0px)',
+          width: `${currentRect.width}px`,
+          height: `${currentRect.height}px`,
+        },
+      ],
+      options
+    );
+  }
+}
+
 export class SharedDOMRectNode extends BaseSharedDOMNode<SharedNodeRect> {
   public animate = (
     previousRect: SharedNodeRect,
