@@ -28,20 +28,20 @@ export function useSharedElementAnimation<T extends HTMLElement = HTMLElement>(
     latestAnimationOptionsRef.current = animationOptions;
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     sharedElementAnimationHelper.enter(
       createSharedDOMElementNode(nodeRef.current, latestStyleKeysRef.current),
       sharedId,
       latestAnimationOptionsRef.current
     );
-  }, [sharedId]);
 
-  useLayoutEffect(() => () => {
-    sharedElementAnimationHelper.exit(
-      createSharedDOMElementNode(nodeRef.current, latestStyleKeysRef.current),
-      sharedId
-    );
-  });
+    return () => {
+      sharedElementAnimationHelper.exit(
+        createSharedDOMElementNode(nodeRef.current, latestStyleKeysRef.current),
+        sharedId
+      );
+    };
+  }, [sharedId]);
 
   return [nodeRef] as const;
 }
