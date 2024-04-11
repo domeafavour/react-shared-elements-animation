@@ -1,11 +1,6 @@
-import {
-  BaseSharedDOMNode,
-  SharedDOMElementNode,
-  SharedDOMRectNode,
-  SharedDOMStyleNode,
-} from './SharedNode';
+import { BaseSharedDOMNode, SharedDOMElementNode } from './SharedNode';
 import { defaultKeyframeAnimationOptions } from './constants';
-import { AnimationOptions, StyleObject } from './typings';
+import { AnimationOptions } from './typings';
 
 type InferSharedDOMNodeValue<T> = T extends BaseSharedDOMNode<infer V>
   ? V
@@ -39,7 +34,7 @@ export class SharedElementAnimationHelper extends DOMAnimationHelper<SharedDOMEl
   public enter(
     sharedNode: SharedDOMElementNode | null,
     sharedId: string,
-    options?: KeyframeAnimationOptions | undefined
+    options = defaultKeyframeAnimationOptions
   ): void {
     const previousValue = this.getCache(sharedId);
     if (sharedNode && previousValue) {
@@ -58,46 +53,3 @@ export class SharedElementAnimationHelper extends DOMAnimationHelper<SharedDOMEl
 }
 
 export const sharedElementAnimationHelper = new SharedElementAnimationHelper();
-
-class SharedRectAnimationHelper extends DOMAnimationHelper<SharedDOMRectNode> {
-  public enter(
-    sharedNode: SharedDOMRectNode | null,
-    sharedId: string,
-    options = defaultKeyframeAnimationOptions
-  ) {
-    const previousRect = this.getCache(sharedId);
-
-    if (sharedNode && previousRect) {
-      sharedNode.animate(previousRect, options);
-    }
-  }
-
-  public exit(sharedNode: SharedDOMRectNode | null, sharedId: string) {
-    if (sharedNode) {
-      this.setCache(sharedId, sharedNode.getNodeRect());
-    }
-  }
-}
-
-export const sharedRectAnimationHelper = new SharedRectAnimationHelper();
-
-class SharedStyleAnimationHelper extends DOMAnimationHelper<SharedDOMStyleNode> {
-  public enter(
-    sharedNode: SharedDOMStyleNode | null,
-    sharedId: string,
-    options = defaultKeyframeAnimationOptions
-  ) {
-    const previousRect = this.getCache(sharedId);
-    if (sharedNode && previousRect) {
-      sharedNode.animate(previousRect, options);
-    }
-  }
-
-  public exit(sharedNode: SharedDOMStyleNode | null, sharedId: string) {
-    if (sharedNode) {
-      this.setCache(sharedId, sharedNode.getStyle());
-    }
-  }
-}
-
-export const sharedStyleAnimationHelper = new SharedStyleAnimationHelper();
