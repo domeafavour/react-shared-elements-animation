@@ -1,5 +1,6 @@
 import { BaseSharedDOMNode, SharedDOMElementNode } from './SharedNode';
 import { defaultKeyframeAnimationOptions } from './constants';
+import { createSharedIdPattern } from './createSharedIdPattern';
 import { AnimationOptions } from './typings';
 
 type InferSharedDOMNodeValue<T> = T extends BaseSharedDOMNode<infer V>
@@ -19,6 +20,14 @@ export abstract class DOMAnimationHelper<N extends BaseSharedDOMNode<any>> {
 
   public removeCache(key: string) {
     this.cache.delete(key);
+  }
+
+  public hasCache(key: string) {
+    return this.cache.has(key);
+  }
+
+  public getCacheKeys() {
+    return Array.from(this.cache.keys());
   }
 
   public abstract enter(
@@ -53,3 +62,30 @@ export class SharedElementAnimationHelper extends DOMAnimationHelper<SharedDOMEl
 }
 
 export const sharedElementAnimationHelper = new SharedElementAnimationHelper();
+
+export class DynamicSharedElementAnimationHelper<
+  P extends object = object
+> extends SharedElementAnimationHelper {
+  private sharedIdPattern: ReturnType<typeof createSharedIdPattern>;
+
+  constructor(pattern: string) {
+    super();
+    this.sharedIdPattern = createSharedIdPattern(pattern);
+  }
+
+  public resolveSharedId(params: P) {
+    return this.sharedIdPattern.generate(params);
+  }
+
+  public exit(sharedNode: SharedDOMElementNode | null, sharedId: string): void {
+    if (this.sharedIdPattern.isMatched(sharedId)) {
+      const cacheKeys = this.getCacheKeys();
+      cacheKeys.forEach((cacheKey) => {
+        if (this.sharedIdPattern.isMatched(cacheKey) && cacheKey !== sharedId) {
+          this.removeCache(cacheKey);
+        }
+      });
+    }
+    super.exit(sharedNode, sharedId);
+  }
+}
