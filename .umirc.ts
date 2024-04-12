@@ -2,6 +2,7 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
   base: '/react-shared-elements-animation',
+  publicPath: '/react-shared-elements-animation/',
   // https://github.com/umijs/umi/issues/10959
   jsMinifier: 'terser',
   hash: true,
