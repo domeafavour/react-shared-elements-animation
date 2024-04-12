@@ -6,6 +6,8 @@ share elements animation while routes change
 
 ![preview](./images/preview.gif)
 
+![preview 2](./images/preview2.gif)
+
 ## TODO
 
 - [x] More styles support
