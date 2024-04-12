@@ -1,7 +1,17 @@
-import { useSharedElementAnimation } from '@/components/SharedElements';
+import { useDynamicSharedElementAnimationHelper } from '@/components/SharedElements';
+import { useLayoutEffect } from 'react';
 
 export function useSharedPhotoTitleAnimation(photoId: number | string) {
-  return useSharedElementAnimation<HTMLHeadingElement>(`title${photoId}`, {
-    styleKeys: ['fontSize', 'color', 'fontWeight'],
-  });
+  const [nodeRef, helper] =
+    useDynamicSharedElementAnimationHelper<HTMLDivElement>(
+      'title/:id',
+      { id: photoId },
+      { styleKeys: ['color', 'fontSize', 'fontWeight'] }
+    );
+
+  useLayoutEffect(() => {
+    helper.enter();
+  }, [photoId]);
+
+  return [nodeRef, helper] as const;
 }

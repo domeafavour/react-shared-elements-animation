@@ -1,13 +1,22 @@
 import { usePhotoQuery } from '@/hooks/usePhotosQuery';
 import { useSharedPhotoImageAnimation } from '@/hooks/useSharedPhotoImageAnimation';
 import { useSharedPhotoTitleAnimation } from '@/hooks/useSharedPhotoTitleAnimation';
+import { useLayoutEffect } from 'react';
 import { useParams } from 'umi';
 
 export default function PhotoDetail() {
   const { id } = useParams<{ id: string }>();
   const { data } = usePhotoQuery(id!);
-  const [titleRef] = useSharedPhotoTitleAnimation(id!);
-  const [imageRef] = useSharedPhotoImageAnimation(id!);
+  const [titleRef, titleHelper] = useSharedPhotoTitleAnimation(id!);
+  const [imageRef, imageHelper] =
+    useSharedPhotoImageAnimation<HTMLImageElement>(id!);
+
+  useLayoutEffect(() => {
+    return () => {
+      titleHelper.leave();
+      imageHelper.leave();
+    };
+  }, [id]);
 
   if (!data) {
     return null;

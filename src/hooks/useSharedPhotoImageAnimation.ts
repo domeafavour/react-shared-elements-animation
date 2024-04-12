@@ -1,8 +1,18 @@
-import { useSharedRectAnimation } from '@/components/SharedElements';
+import { useDynamicSharedElementAnimationHelper } from '@/components/SharedElements';
+import { useLayoutEffect } from 'react';
 
-export function useSharedPhotoImageAnimation(photoId: number | string) {
-  const [imageRef] = useSharedRectAnimation<HTMLImageElement>(
-    `photo${photoId}`
+export function useSharedPhotoImageAnimation<T extends HTMLElement>(
+  photoId: number | string
+) {
+  const [nodeRef, helper] = useDynamicSharedElementAnimationHelper<T>(
+    'photo/:id',
+    { id: photoId },
+    { styleKeys: [] }
   );
-  return [imageRef];
+
+  useLayoutEffect(() => {
+    helper.enter();
+  }, [photoId]);
+
+  return [nodeRef, helper] as const;
 }
