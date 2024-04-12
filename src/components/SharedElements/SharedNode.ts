@@ -20,21 +20,17 @@ export class SharedDOMElementNode extends BaseSharedDOMNode<AnimationValue> {
     options?: KeyframeAnimationOptions | undefined
   ): void {
     const currentRect = this.getNodeRect();
-    const currentStyle = this.getStyle();
     const previousRect = previousValue.rect;
-    const previousStyle = previousValue.style;
     const dx = previousRect.left - currentRect.left;
     const dy = previousRect.top - currentRect.top;
     this.domNode.animate(
       [
         {
-          ...previousStyle,
           transform: `translate(${dx}px, ${dy}px)`,
           width: `${previousRect.width}px`,
           height: `${previousRect.height}px`,
         },
         {
-          ...currentStyle,
           transform: 'translate(0px, 0px)',
           width: `${currentRect.width}px`,
           height: `${currentRect.height}px`,
@@ -42,5 +38,11 @@ export class SharedDOMElementNode extends BaseSharedDOMNode<AnimationValue> {
       ],
       options
     );
+
+    const previousStyle = previousValue.style;
+    const currentStyle = this.getStyle();
+    if (Object.keys(previousStyle).length && Object.keys(currentStyle).length) {
+      this.domNode.animate([previousStyle, currentStyle], options);
+    }
   }
 }
