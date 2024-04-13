@@ -1,17 +1,9 @@
-import { useDynamicSharedElementAnimationHelper } from '@/components/SharedElements';
-import { useLayoutEffect } from 'react';
+import { usePatternSharedElementAnimationHelper } from '@/components/SharedElements';
 
 export function useSharedPhotoTitleAnimation(photoId: number | string) {
-  const [nodeRef, helper] =
-    useDynamicSharedElementAnimationHelper<HTMLDivElement>(
-      'title/:id',
-      { id: photoId },
-      { styleKeys: ['color', 'fontSize', 'fontWeight'] }
-    );
-
-  useLayoutEffect(() => {
-    helper.enter();
-  }, [photoId]);
-
-  return [nodeRef, helper] as const;
+  return usePatternSharedElementAnimationHelper<HTMLDivElement>(
+    'title/:id',
+    { id: photoId },
+    { styleKeys: ['color', 'fontSize', 'fontWeight'] }
+  );
 }

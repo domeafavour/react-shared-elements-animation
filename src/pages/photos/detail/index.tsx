@@ -1,7 +1,10 @@
+import {
+  useFromSnapshotEffect,
+  useMakeSnapshotEffect,
+} from '@/components/SharedElements';
 import { usePhotoQuery } from '@/hooks/usePhotosQuery';
 import { useSharedPhotoImageAnimation } from '@/hooks/useSharedPhotoImageAnimation';
 import { useSharedPhotoTitleAnimation } from '@/hooks/useSharedPhotoTitleAnimation';
-import { useLayoutEffect } from 'react';
 import { useParams } from 'umi';
 
 export default function PhotoDetail() {
@@ -11,11 +14,14 @@ export default function PhotoDetail() {
   const [imageRef, imageHelper] =
     useSharedPhotoImageAnimation<HTMLImageElement>(id!);
 
-  useLayoutEffect(() => {
-    return () => {
-      titleHelper.leave();
-      imageHelper.leave();
-    };
+  useFromSnapshotEffect(() => {
+    titleHelper.fromSnapshot();
+    imageHelper.fromSnapshot();
+  }, [id]);
+
+  useMakeSnapshotEffect(() => {
+    titleHelper.makeSnapshot();
+    imageHelper.makeSnapshot();
   }, [id]);
 
   if (!data) {

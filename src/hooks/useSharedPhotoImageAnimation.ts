@@ -1,18 +1,11 @@
-import { useDynamicSharedElementAnimationHelper } from '@/components/SharedElements';
-import { useLayoutEffect } from 'react';
+import { usePatternSharedElementAnimationHelper } from '@/components/SharedElements';
 
 export function useSharedPhotoImageAnimation<T extends HTMLElement>(
   photoId: number | string
 ) {
-  const [nodeRef, helper] = useDynamicSharedElementAnimationHelper<T>(
+  return usePatternSharedElementAnimationHelper<T>(
     'photo/:id',
     { id: photoId },
     { styleKeys: [] }
   );
-
-  useLayoutEffect(() => {
-    helper.enter();
-  }, [photoId]);
-
-  return [nodeRef, helper] as const;
 }

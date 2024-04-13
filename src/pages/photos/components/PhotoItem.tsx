@@ -1,4 +1,5 @@
 import { PhotoItemTitle } from '@/components/PhotoItemTitle';
+import { useFromSnapshotEffect } from '@/components/SharedElements';
 import { Photo } from '@/hooks/usePhotosQuery';
 import { useSharedPhotoImageAnimation } from '@/hooks/useSharedPhotoImageAnimation';
 import { useSharedPhotoTitleAnimation } from '@/hooks/useSharedPhotoTitleAnimation';
@@ -12,7 +13,12 @@ export function PhotoItem({ photo }: { photo: Photo }) {
   );
 
   // If the image or title has no shared element animation, we should fade in the photo item.
-  const shouldFadeIn = !imageHelper.hasAnimation || !titleHelper.hasAnimation;
+  const shouldFadeIn = !imageHelper.hasSnapshot || !titleHelper.hasSnapshot;
+
+  useFromSnapshotEffect(() => {
+    titleHelper.fromSnapshot();
+    imageHelper.fromSnapshot();
+  }, [photo.id]);
 
   return (
     <div
@@ -22,9 +28,8 @@ export function PhotoItem({ photo }: { photo: Photo }) {
         shouldFadeIn && 'animate-in fade-in-25 duration-500'
       )}
       onClick={() => {
-        // Trigger leave manually.
-        titleHelper.leave();
-        imageHelper.leave();
+        titleHelper.makeSnapshot();
+        imageHelper.makeSnapshot();
       }}
     >
       <Link to={`/photos/${photo.id}`} className="flex flex-col gap-2">
