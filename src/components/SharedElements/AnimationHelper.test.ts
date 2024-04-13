@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react';
-import { DynamicSharedElementAnimationHelper } from './AnimationHelper';
+import { PatternSharedElementAnimationHelper } from './AnimationHelper';
 import { createSharedDOMElementNode } from './useSharedElementAnimation';
 
 describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
-  const photoTitleHelper = new DynamicSharedElementAnimationHelper<{
+  const photoTitleHelper = new PatternSharedElementAnimationHelper<{
     id: string;
   }>('photo-title/:id');
 
@@ -13,7 +13,7 @@ describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
 
     const sharedNode = createSharedDOMElementNode(domNode, []);
     domNode.onclick = () => {
-      photoTitleHelper.exit(sharedNode, sharedId);
+      photoTitleHelper.makeSnapshot(sharedNode, sharedId);
     };
 
     return [domNode, sharedNode] as const;
@@ -29,7 +29,7 @@ describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
     // enter photo detail 1
     const [detailDomNode1, detailSharedNode1] =
       createSharedElement('photo-title/1');
-    photoTitleHelper.enter(detailSharedNode1, 'photo-title/1');
+    photoTitleHelper.fromSnapshot(detailSharedNode1, 'photo-title/1');
     expect(detailDomNode1.animate).toHaveBeenCalledTimes(1);
 
     // leave photo detail 1
@@ -39,8 +39,8 @@ describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
     [itemDomNode1, itemSharedNode1] = createSharedElement('photo-title/1');
     [itemDomNode2, itemPhotoTitle2] = createSharedElement('photo-title/2');
 
-    photoTitleHelper.enter(itemSharedNode1, 'photo-title/1');
-    photoTitleHelper.enter(itemPhotoTitle2, 'photo-title/2');
+    photoTitleHelper.fromSnapshot(itemSharedNode1, 'photo-title/1');
+    photoTitleHelper.fromSnapshot(itemPhotoTitle2, 'photo-title/2');
 
     expect(itemDomNode1.animate).toHaveBeenCalledTimes(1);
     expect(itemDomNode2.animate).not.toHaveBeenCalled();
@@ -52,21 +52,21 @@ describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
     // enter photo detail 2
     let [detailDomNode2, detailSharedNode2] =
       createSharedElement('photo-title/2');
-    photoTitleHelper.enter(detailSharedNode2, 'photo-title/2');
+    photoTitleHelper.fromSnapshot(detailSharedNode2, 'photo-title/2');
     expect(detailDomNode2.animate).toHaveBeenCalledTimes(1);
 
     // leave photo detail 2
     fireEvent.click(detailDomNode2);
 
     // should auto remove the cache of photo detail 1
-    expect(photoTitleHelper.hasCache('photo-title/1')).toBe(false);
+    expect(photoTitleHelper.hasSnapshot('photo-title/1')).toBe(false);
 
     // back to list again, recreate dom nodes and shared nodes
     [itemDomNode1, itemSharedNode1] = createSharedElement('photo-title/1');
     [itemDomNode2, itemPhotoTitle2] = createSharedElement('photo-title/2');
 
-    photoTitleHelper.enter(itemSharedNode1, 'photo-title/1');
-    photoTitleHelper.enter(itemPhotoTitle2, 'photo-title/2');
+    photoTitleHelper.fromSnapshot(itemSharedNode1, 'photo-title/1');
+    photoTitleHelper.fromSnapshot(itemPhotoTitle2, 'photo-title/2');
 
     // expect(itemDomNode1.animate).not.toHaveBeenCalled();
     expect(itemDomNode2.animate).toHaveBeenCalledTimes(1);

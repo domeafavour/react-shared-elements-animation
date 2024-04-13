@@ -1,11 +1,27 @@
 import { getDOMSharedNodeRect, getDOMStyleObject } from './helpers';
-import { AnimationOptions, AnimationValue, StyleKey } from './typings';
+import {
+  AnimationOptions,
+  AnimationValue,
+  SharedNodeRect,
+  StyleKey,
+  StyleObject,
+} from './typings';
 
-export abstract class BaseSharedDOMNode<V> {
+export abstract class BaseSharedNode<V> {
+  abstract getNodeRect(): SharedNodeRect;
+
+  abstract getStyle(): StyleObject;
+
+  abstract animate(previousValue: V, options?: AnimationOptions): void;
+}
+
+export abstract class BaseSharedDOMNode<V> extends BaseSharedNode<V> {
   constructor(
     protected domNode: HTMLElement,
     protected styleKeys?: StyleKey[]
-  ) {}
+  ) {
+    super();
+  }
 
   getNodeRect = () => getDOMSharedNodeRect(this.domNode);
 
