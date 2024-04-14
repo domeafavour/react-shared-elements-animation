@@ -1,5 +1,6 @@
 import {
   createSharedIdPattern,
+  generateFromPattern,
   getMatchedParams,
   isParamsMatched,
 } from './createSharedIdPattern';
@@ -81,5 +82,17 @@ describe('isParamsMatched', () => {
     expect(isParamsMatched('header', 'header2')).not.toBe(true);
     expect(isParamsMatched('photo/:id', 'photo/1')).not.toBe(true);
     expect(isParamsMatched('photo/:id', 'photo/:id/')).not.toBe(true);
+  });
+});
+
+describe('generateFromPattern', () => {
+  it('generate without params', () => {
+    expect(generateFromPattern('header', {})).toBe('header');
+    expect(generateFromPattern('photo/:id')).toBe('photo/:id');
+    expect(generateFromPattern('photo/id', {})).toBe('photo/id');
+  });
+
+  it('generate with params', () => {
+    expect(generateFromPattern('photo/:id', { id: '1' })).toBe('photo/1');
   });
 });

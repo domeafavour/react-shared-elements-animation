@@ -65,6 +65,23 @@ export function getMatchedParams<S extends string>(
   return params as PatternParams<S>;
 }
 
+export function generateFromPattern<S extends string>(
+  pattern: S,
+  params?: PatternParams<S>
+) {
+  if (!pattern.includes('/') || !params) {
+    return pattern;
+  }
+  const parts = pattern.split('/');
+  return parts
+    .map((part) =>
+      isVariable(part)
+        ? params[getVariableName<keyof typeof params & string>(part)]
+        : part
+    )
+    .join('/');
+}
+
 export function createSharedIdPattern<P extends object = object>(
   pattern: string
 ) {
@@ -82,17 +99,7 @@ export function createSharedIdPattern<P extends object = object>(
   }
 
   function generate(params: P) {
-    if (!pattern.includes('/')) {
-      return pattern;
-    }
-    const parts = pattern.split('/');
-    return parts
-      .map((part) =>
-        isVariable(part)
-          ? params[getVariableName<keyof P & string>(part)]
-          : part
-      )
-      .join('/');
+    return generateFromPattern(pattern, params);
   }
 
   return { match, matchParams, isMatched, generate };
