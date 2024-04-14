@@ -1,11 +1,11 @@
 import { fireEvent } from '@testing-library/react';
 import { PatternSharedElementAnimationHelper } from './AnimationHelper';
-import { createSharedDOMElementNode } from './useSharedElementAnimation';
+import { createSharedDOMElementNode } from './useAnimationHelper';
 
 describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
-  const photoTitleHelper = new PatternSharedElementAnimationHelper<{
-    id: string;
-  }>('photo-title/:id');
+  const photoTitleHelper = new PatternSharedElementAnimationHelper(
+    'photo-title/:id'
+  );
 
   function createSharedElement(sharedId: string) {
     const domNode = document.createElement('div');

@@ -1,22 +1,25 @@
 import { BaseSharedNode, SharedDOMElementNode } from './SharedNode';
 import { SnapshotManager } from './SnapshotManager';
 import { defaultKeyframeAnimationOptions } from './constants';
-import { createSharedIdPattern } from './createSharedIdPattern';
 import { AnimationOptions, AnimationValue } from './typings';
 
-export abstract class BaseAnimationHelper<N extends BaseSharedNode<any>> {
-  public abstract fromSnapshot(
+export interface BaseAnimationHelper<N extends BaseSharedNode<any>> {
+  fromSnapshot(
     sharedNode: N | null,
     sharedId: string,
     options?: AnimationOptions
   ): void;
 
-  public abstract makeSnapshot(sharedNode: N | null, sharedId: string): void;
+  makeSnapshot(sharedNode: N | null, sharedId: string): void;
 
-  public abstract hasSnapshot(sharedId: string): boolean;
+  hasSnapshot(sharedId: string): boolean;
+
+  clearSnapshots(pattern?: string): void;
 }
 
-export class SharedElementAnimationHelper extends BaseAnimationHelper<SharedDOMElementNode> {
+export class SharedElementAnimationHelper
+  implements BaseAnimationHelper<SharedDOMElementNode>
+{
   protected snapshotManager = new SnapshotManager<AnimationValue>();
 
   public fromSnapshot(
@@ -46,34 +49,23 @@ export class SharedElementAnimationHelper extends BaseAnimationHelper<SharedDOME
     return this.snapshotManager.has(sharedId);
   }
 
-  protected clearSnapshots() {
-    this.snapshotManager.clear();
+  public clearSnapshots(pattern?: string) {
+    this.snapshotManager.clear(pattern);
   }
 }
 
 export const sharedElementAnimationHelper = new SharedElementAnimationHelper();
 
-export class PatternSharedElementAnimationHelper<
-  P extends object = object,
-> extends SharedElementAnimationHelper {
-  private sharedIdPattern: ReturnType<typeof createSharedIdPattern>;
-
-  constructor(pattern: string) {
+export class PatternSharedElementAnimationHelper extends SharedElementAnimationHelper {
+  constructor(private pattern: string) {
     super();
-    this.sharedIdPattern = createSharedIdPattern(pattern);
-  }
-
-  public generateSharedId(params: P) {
-    return this.sharedIdPattern.generate(params);
   }
 
   public makeSnapshot(
     sharedNode: SharedDOMElementNode | null,
     sharedId: string
   ): void {
-    if (this.sharedIdPattern.isMatched(sharedId)) {
-      super.clearSnapshots();
-    }
+    super.clearSnapshots(this.pattern);
     super.makeSnapshot(sharedNode, sharedId);
   }
 }

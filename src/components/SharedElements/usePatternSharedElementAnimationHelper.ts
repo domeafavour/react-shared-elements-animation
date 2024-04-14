@@ -1,20 +1,8 @@
-import { PatternSharedElementAnimationHelper } from './AnimationHelper';
+import { useCallback } from 'react';
+import { sharedElementAnimationHelper as animationHelper } from './AnimationHelper';
+import { generateFromPattern } from './createSharedIdPattern';
 import { AnimationOptions, StyleKey } from './typings';
 import { useDOMAnimationHelper } from './useAnimationHelper';
-
-const DYNAMIC_HELPERS = new Map<string, PatternSharedElementAnimationHelper>();
-
-function ensureAnimationHelper<P extends object = object>(pattern: string) {
-  if (!DYNAMIC_HELPERS.has(pattern)) {
-    DYNAMIC_HELPERS.set(
-      pattern,
-      new PatternSharedElementAnimationHelper<P>(pattern)
-    );
-  }
-  return DYNAMIC_HELPERS.get(
-    pattern
-  )! as PatternSharedElementAnimationHelper<P>;
-}
 
 export function usePatternSharedElementAnimationHelper<
   T extends HTMLElement = HTMLElement,
@@ -24,12 +12,21 @@ export function usePatternSharedElementAnimationHelper<
   params: P,
   options?: { styleKeys?: StyleKey[]; options?: AnimationOptions }
 ) {
-  const animationHelper = ensureAnimationHelper<P>(pattern);
-  const sharedId = animationHelper.generateSharedId(params);
+  const sharedId = generateFromPattern(pattern, params);
 
-  return useDOMAnimationHelper<PatternSharedElementAnimationHelper<P>, T>(
+  const [nodeRef, helper] = useDOMAnimationHelper(
     animationHelper,
     sharedId,
     options
   );
+
+  const makeSnapshot = useCallback(() => {
+    animationHelper.clearSnapshots(pattern);
+    helper.makeSnapshot();
+  }, [pattern, helper.makeSnapshot]);
+
+  return [
+    nodeRef as React.MutableRefObject<T | null>,
+    { ...helper, makeSnapshot },
+  ] as const;
 }
