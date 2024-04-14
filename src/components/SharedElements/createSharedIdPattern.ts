@@ -20,6 +20,31 @@ export function isPatternMatched<S extends string>(
   );
 }
 
+/**
+ * @deprecated
+ */
+export function isParamsMatched<S extends string>(
+  pattern: S,
+  sharedId: string,
+  params?: Partial<PatternParams<S>>
+) {
+  if (!isPatternMatched(pattern, sharedId) || !params) {
+    return pattern === sharedId;
+  }
+
+  const parts = pattern.split('/');
+  const idParts = sharedId.split('/');
+  return parts.every((part, index) => {
+    if (isVariable(part)) {
+      return (
+        params[getVariableName<keyof typeof params & string>(part)] ===
+        idParts[index]
+      );
+    }
+    return true;
+  });
+}
+
 export function getMatchedParams<S extends string>(
   pattern: S,
   sharedId: string
@@ -43,20 +68,9 @@ export function getMatchedParams<S extends string>(
 export function createSharedIdPattern<P extends object = object>(
   pattern: string
 ) {
+  /** @deprecated */
   function match(sharedId: string, params?: Partial<P>) {
-    if (!pattern.includes('/') || !params) {
-      return pattern === sharedId;
-    }
-    const parts = pattern.split('/');
-    const idParts = sharedId.split('/');
-    if (parts.length !== idParts.length) {
-      return false;
-    }
-    return parts.every((part, index) => {
-      return isVariable(part)
-        ? params[getVariableName<keyof P & string>(part)] === idParts[index]
-        : part === idParts[index];
-    });
+    return isParamsMatched(pattern, sharedId, params);
   }
 
   function matchParams(sharedId: string) {

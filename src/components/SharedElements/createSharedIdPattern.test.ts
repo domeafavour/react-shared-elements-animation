@@ -1,6 +1,7 @@
 import {
   createSharedIdPattern,
   getMatchedParams,
+  isParamsMatched,
 } from './createSharedIdPattern';
 
 describe('createSharedIdPattern', () => {
@@ -66,5 +67,19 @@ describe('getMatchedParams', () => {
       id: '1',
       name: '2',
     });
+  });
+});
+
+describe('isParamsMatched', () => {
+  it('should match params', () => {
+    expect(isParamsMatched('header', 'header')).toBe(true);
+    expect(isParamsMatched('photo/:id', 'photo/1', { id: '1' })).toBe(true);
+    expect(isParamsMatched('photo/:id', 'photo/:id')).toBe(true);
+  });
+
+  it('should not match params', () => {
+    expect(isParamsMatched('header', 'header2')).not.toBe(true);
+    expect(isParamsMatched('photo/:id', 'photo/1')).not.toBe(true);
+    expect(isParamsMatched('photo/:id', 'photo/:id/')).not.toBe(true);
   });
 });
