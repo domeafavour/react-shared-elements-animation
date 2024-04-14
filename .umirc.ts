@@ -1,6 +1,7 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
+  title: 'React Shared Elements Animation',
   base: '/react-shared-elements-animation',
   publicPath: '/react-shared-elements-animation/',
   // https://github.com/umijs/umi/issues/10959
