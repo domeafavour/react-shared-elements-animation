@@ -1,12 +1,18 @@
 {
   "private": true,
-  "name": "shared-elements-animation",
   "author": "",
-  "description": "Shared Elements Animation",
+  "name": "@shared-elements-animation/react-example",
+  "description": "react shared elements animation example",
   "scripts": {
-    "dev:react": "cd examples/react && pnpm dev"
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev",
+    "test": "jest"
   },
   "dependencies": {
+    "@shared-elements-animation/react": "workspace:^",
     "@tanstack/react-query": "^5.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
