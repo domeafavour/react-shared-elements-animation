@@ -12,6 +12,8 @@ export abstract class BaseAnimationHelper<N extends BaseSharedNode<any>> {
   ): void;
 
   public abstract makeSnapshot(sharedNode: N | null, sharedId: string): void;
+
+  public abstract hasSnapshot(sharedId: string): boolean;
 }
 
 export class SharedElementAnimationHelper extends BaseAnimationHelper<SharedDOMElementNode> {

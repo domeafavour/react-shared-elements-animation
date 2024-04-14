@@ -6,8 +6,17 @@ function getVariableName<T extends string = string>(part: string): T {
   return part.replace(/^:/, '') as T;
 }
 
-// /photo/:id/detail/:name
-const PATTERN = /^(\/?(\:?[^\/]+)\/)+\/?$/;
+export function isPatternMatched<S extends string>(
+  pattern: S,
+  sharedId: string
+) {
+  const parts = pattern.split('/');
+  const idParts = sharedId.split('/');
+  return (
+    parts.length === idParts.length &&
+    parts.every((part, index) => isVariable(part) || part === idParts[index])
+  );
+}
 
 export function createSharedIdPattern<P extends object = object>(
   pattern: string
@@ -44,11 +53,7 @@ export function createSharedIdPattern<P extends object = object>(
   }
 
   function isMatched(sharedId: string) {
-    const parts = pattern.split('/');
-    const idParts = sharedId.split('/');
-    return parts.every(
-      (part, index) => isVariable(part) || part === idParts[index]
-    );
+    return isPatternMatched(pattern, sharedId);
   }
 
   function generate(params: P) {
