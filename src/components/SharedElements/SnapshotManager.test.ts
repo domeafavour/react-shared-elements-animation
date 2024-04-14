@@ -8,8 +8,6 @@ describe('SnapshotManager', () => {
     snapshotManager.set('photo/2/title', '2 title');
     snapshotManager.set('photos', 'photos');
 
-    expect(snapshotManager.keys().length).toBe(4);
-
     snapshotManager.clear('photo/:id');
 
     expect(snapshotManager.has('photo/1')).toBe(false);

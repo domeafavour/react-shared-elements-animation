@@ -19,13 +19,9 @@ export class SnapshotManager<V> {
     return this.snapshots.has(key);
   }
 
-  public keys() {
-    return Array.from(this.snapshots.keys());
-  }
-
   public clear(pattern?: string) {
     if (pattern) {
-      this.keys().forEach((key) => {
+      this.snapshots.forEach((_, key) => {
         if (isPatternMatched(pattern, key)) {
           this.remove(key);
         }
