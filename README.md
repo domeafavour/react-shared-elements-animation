@@ -11,3 +11,4 @@ share elements animation while routes change
 ## TODO
 
 - [x] More styles support
+- [ ] Associate with history
