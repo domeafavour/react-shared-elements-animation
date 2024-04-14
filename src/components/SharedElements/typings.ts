@@ -18,6 +18,11 @@ export type StyleKey = Exclude<
 
 export type AnimationOptions = KeyframeAnimationOptions;
 
+export type UseAnimationHelperOptions = {
+  styleKeys?: StyleKey[];
+  options?: AnimationOptions;
+};
+
 export type AnimationValue = {
   rect: SharedNodeRect;
   style: StyleObject;

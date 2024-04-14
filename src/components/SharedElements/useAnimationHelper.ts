@@ -1,24 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 import { BaseAnimationHelper } from './AnimationHelper';
-import { SharedDOMElementNode } from './SharedNode';
-import { AnimationOptions, StyleKey } from './typings';
+import { createSharedDOMElementNode } from './createSharedDOMElementNode';
+import { UseAnimationHelperOptions } from './typings';
 import { useLatestRef } from './useLatestRef';
-
-export function createSharedDOMElementNode<T extends HTMLElement>(
-  domNode: T | null,
-  styleKeys?: StyleKey[]
-) {
-  return domNode ? new SharedDOMElementNode(domNode, styleKeys) : null;
-}
 
 export function useDOMAnimationHelper<
   H extends BaseAnimationHelper<any>,
   T extends HTMLElement = HTMLElement,
->(
-  animationHelper: H,
-  sharedId: string,
-  options?: { styleKeys?: StyleKey[]; options?: AnimationOptions }
-) {
+>(animationHelper: H, sharedId: string, options?: UseAnimationHelperOptions) {
   const nodeRef = useRef<T | null>(null);
 
   const [hasSnapshot] = useState(() => animationHelper.hasSnapshot(sharedId));

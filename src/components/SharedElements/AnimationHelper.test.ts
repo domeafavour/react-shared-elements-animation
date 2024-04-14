@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { PatternSharedElementAnimationHelper } from './AnimationHelper';
-import { createSharedDOMElementNode } from './useAnimationHelper';
+import { createSharedDOMElementNode } from './createSharedDOMElementNode';
 
 describe('AnimationHelper - DynamicSharedElementAnimationHelper', () => {
   const photoTitleHelper = new PatternSharedElementAnimationHelper(
