@@ -4,7 +4,8 @@
   "author": "",
   "description": "Shared Elements Animation",
   "scripts": {
-    "dev:react": "cd examples/react && pnpm dev"
+    "dev:react": "cd examples/react && pnpm dev",
+    "dev:vue": "cd examples/vue && pnpm dev"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.29.0",
