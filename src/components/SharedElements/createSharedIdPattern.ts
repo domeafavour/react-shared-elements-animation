@@ -1,3 +1,5 @@
+import { PatternParams } from './typings';
+
 function isVariable(part: string) {
   return part.startsWith(':');
 }
@@ -16,6 +18,26 @@ export function isPatternMatched<S extends string>(
     parts.length === idParts.length &&
     parts.every((part, index) => isVariable(part) || part === idParts[index])
   );
+}
+
+export function getMatchedParams<S extends string>(
+  pattern: S,
+  sharedId: string
+): Partial<PatternParams<S>> {
+  if (!isPatternMatched(pattern, sharedId)) {
+    return {};
+  }
+
+  const params: Record<string, string> = {};
+  const parts = pattern.split('/');
+  const idParts = sharedId.split('/');
+  parts.forEach((part, index) => {
+    if (isVariable(part)) {
+      params[getVariableName(part)] = idParts[index];
+    }
+  });
+
+  return params as PatternParams<S>;
 }
 
 export function createSharedIdPattern<P extends object = object>(
@@ -38,18 +60,7 @@ export function createSharedIdPattern<P extends object = object>(
   }
 
   function matchParams(sharedId: string) {
-    const params: Record<string, any> = {};
-    if (!pattern.includes('/')) {
-      return params;
-    }
-    const parts = pattern.split('/');
-    const idParts = sharedId.split('/');
-    parts.forEach((part, index) => {
-      if (isVariable(part)) {
-        params[getVariableName<keyof P & string>(part)] = idParts[index];
-      }
-    });
-    return params as Partial<P>;
+    return getMatchedParams(pattern, sharedId) as Partial<P>;
   }
 
   function isMatched(sharedId: string) {

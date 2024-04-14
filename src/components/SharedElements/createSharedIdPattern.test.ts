@@ -1,4 +1,7 @@
-import { createSharedIdPattern } from './createSharedIdPattern';
+import {
+  createSharedIdPattern,
+  getMatchedParams,
+} from './createSharedIdPattern';
 
 describe('createSharedIdPattern', () => {
   it('should return true if pattern is equal to sharedId, return false otherwise.', () => {
@@ -47,5 +50,21 @@ describe('createSharedIdPattern', () => {
     expect(matchParams('photo/1/detail/2')).toEqual({ id: '1', name: '2' });
 
     expect(generate({ id: '1', name: '2' })).toBe('photo/1/detail/2');
+  });
+});
+
+describe('getMatchedParams', () => {
+  it('should return empty object if pattern is not matched', () => {
+    expect(getMatchedParams('photo/:id', 'photo')).toEqual({});
+    expect(getMatchedParams('photo', 'photo')).toEqual({});
+  });
+
+  it('should return matched params', () => {
+    expect(
+      getMatchedParams('photo/:id/detail/:name', 'photo/1/detail/2')
+    ).toEqual({
+      id: '1',
+      name: '2',
+    });
   });
 });
