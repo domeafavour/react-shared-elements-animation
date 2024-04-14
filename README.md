@@ -4,9 +4,9 @@ share elements animation while routes change
 
 ## Preview
 
-![preview](./images/preview.gif)
+![preview](./media/preview.gif)
 
-![preview 2](./images/preview2.gif)
+![preview 2](./media/preview2.gif)
 
 ## TODO
 
