@@ -29,7 +29,7 @@ export default function PhotoDetail() {
   }
 
   return (
-    <div className="w-1/2 m-auto">
+    <div className="w-2/3 m-auto">
       <header>
         <h1
           ref={titleRef}
@@ -39,7 +39,7 @@ export default function PhotoDetail() {
         </h1>
         <img
           ref={imageRef}
-          className="m-auto w-full h-60 object-cover object-center"
+          className="w-full h-60 object-cover object-center"
           src={data.thumbnailUrl}
           alt={data.title}
         />

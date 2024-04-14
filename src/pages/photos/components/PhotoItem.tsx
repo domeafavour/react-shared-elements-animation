@@ -25,7 +25,9 @@ export function PhotoItem({ photo }: { photo: Photo }) {
       className={twMerge(
         'border border-solid border-gray-400',
         'rounded-md size-52',
-        shouldFadeIn && 'animate-in fade-in-25 duration-500'
+        shouldFadeIn && 'animate-in fade-in-25 duration-500',
+        // Make sure the photo item is above the rest items.
+        !shouldFadeIn && 'z-10'
       )}
       onClick={() => {
         titleHelper.makeSnapshot();
